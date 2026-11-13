@@ -122,3 +122,32 @@ def write_grid(
         reason = error.strerror if isinstance(error, OSError) and error.strerror else str(error)
         print(f'Error: cannot write file "{filename}": {reason}', file=sys.stderr)
         sys.exit(-1)
+
+
+import sys
+
+def lire_grille_stdin():
+
+    #Lit une grille de cellules depuis l'entrée standard (STDIN).Transforme chaque ligne en liste d'entiers (0 ou 1).
+    grille = []
+    for ligne in sys.stdin:
+        ligne_propre = ligne.strip()
+        if ligne_propre:
+            ligne_cells = [int(caractere) for caractere in ligne_propre]
+            grille.append(ligne_cells)
+    return grille
+
+def get_cellule(grille, i, j, periodique=False):
+    #Renvoie l'état de la cellule (0 ou 1) à la position (i, j). Si periodique=True, les indices s'enroulent (effet tore). Sinon, si on sort de la grille, on renvoie 0 (mort).
+    
+    nb_lignes = len(grille)
+    nb_cols = len(grille[0])
+
+    if periodique:
+        i = i % nb_lignes
+        j = j % nb_cols
+    else:
+        if not (0 <= i < nb_lignes and 0 <= j < nb_cols):
+            return 0
+
+    return grille[i][j]
